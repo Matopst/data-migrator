@@ -21,7 +21,6 @@ spec:
   containers:
   - name: migrator
     image: ghcr.io/matopst/migration-pod:latest
-    command: ["/usr/local/bin/validate-copy.sh"]
     volumeMounts:
     - mountPath: /mnt/old
       name: old-data
@@ -52,9 +51,13 @@ spec:
       claimName: new-claim-name
 ``` 
 
-Exec within the shell with: 
+Exec within the shell to copy using: 
 
-kubectl exec -it -n your-namespace pg-data-migrator -- sh
+kubectl exec -it pg-data-migrator -- sh -c "rsync -aAXv --progress /mnt/old/ /mnt/new/"
+
+Run the script:
+
+/usr/local/bin/validate-copy.sh
 
 Expected output:
 🔍 Starting PostgreSQL data migration validation...
